@@ -1,6 +1,6 @@
 # password-generator
 
 # TODO:
-- Code prompts & validations (Monday AM)
-- Code password generator (Tuesday AM)
-- Testing testing testing (Wednesday AM)
+- Code validations
+- Code password generator
+- Testing testing testing
