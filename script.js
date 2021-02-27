@@ -2,74 +2,87 @@
 var generateBtn = document.querySelector("#generate"); // ties JS variable to the HTML button
 
 // Write password to the #password input
-function writePassword() {
+function generatePassword() {
   window.alert("Let's make you a password!");
-  // Set up variables to represent choice of character sets and password length
-  var upper = "N";
-  var lower = "N";
-  var num = "N";
-  var special = "N";
-  var length = 0;
 
-  // Prompt for character types to include in the password (lowercase, uppercase, numeric, and/or special characters)
-  // Convert user input to upper case
+  // Have user confirm character types to include in the password (lowercase, uppercase, numeric, and/or special characters)
   // Validate that at least one chracter set is chosen before moving on
-  while (upper != "Y" && lower != "Y" && num != "Y" && special != "Y") {
-    var upper = window.prompt("Does your password need uppercase characters? [Y/N]\nExamples: A, B, C", "Y");
-    upper = upper.toUpperCase();
-    var lower = window.prompt("Does your password need lowercase characters? [Y/N]\nExamples: a, b, c", "Y");
-    lower = lower.toUpperCase();
-    var num = window.prompt("Does your password need numeric characters? [Y/N]\nExamples: 1, 2, 3", "Y");
-    num = num.toUpperCase();
-    var special = window.prompt("Does your password need special characters? [Y/N]\nExamples: !, %, $", "Y");
-    special = special.toUpperCase();
-    if (upper != "Y" && lower != "Y" && num != "Y" && special != "Y") {
+  while (!upper && !lower && !num && !special) {
+    var upper = window.confirm("Click OK to use uppercase characters.\nExamples: A, B, C");
+    var lower = window.confirm("Click OK to use lowercase characters.\nExamples: a, b, c");
+    var num = window.confirm("Click OK to use numeric characters.\nExamples: 1, 2, 3");
+    var special = window.confirm("Click OK to use special characters.\nExamples: !, %, $");
+    if (!upper && !lower && !num && !special) {
       window.alert("I need something to work with...\nPlease choose at least one character type.")
     }
   }
 
+  var length = 0;
   // Prompt for length and validate that length is at least 8, no more than 128 characters
-  while (length < 8 || length > 128) {
-    var length = window.prompt("How long do you need the password to be?\nMust be at least 8 characters and no longer than 128.", "12");
+  while (length < 8 || length > 128 ) {
+    length = window.prompt("How long do you need the password to be?\nMust be at least 8 characters and no longer than 128.", "12");
+    if (isNaN(parseInt(length))) {
+      window.alert("Please enter a number.");
+      length = 0;
+    }
+    if (length === null) {
+      break;
+    }
   }
 
   // Generate the password:
   // Create arrays for each character type
-  var upperList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]; 
-  var lowerList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "x"];
-  var numList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-  var specialList =  ["!", "$", "%", "&", "\"", "(", ")", "*", "+", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "`", "{", "|", "}", "~", "_"];
+  var upperList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]; // 26 
+  var lowerList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "x"]; // 26
+  var numList = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; // 10
+  var specialList =  ["!", "$", "%", "&", "\"", "(", ")", "*", "+", "-", ".", "/", ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "`", "{", "|", "}", "~", "_"]; // 29
 
-  // Make a combined array of the character sets user wants
-  var combinedList = [];
-  if (upper === "Y") {
-    combinedList = combinedList.concat(upperList);
-  }
-  if (lower === "Y") {
-    combinedList = combinedList.concat(lowerList);
-  }
-  if (num === "Y") {
-    combinedList = combinedList.concat(numList);
-  }
-  if (special === "Y") {
-    combinedList = combinedList.concat(specialList);
-  }
-
-  // Pick [length] # of elements from the combined array
+  // Choose the first few password characters from the individual character arrays. This ensures the random selection doesn't leave any character types out.
+  // Make a combined array of the character sets user wants.
   var password = "";
+  var combinedList = [];
+  var x = 0;
 
-  for (var i=0; i < length; i++) {
-    var index = Math.floor(Math.random() * combinedList.length);
-    password = password + combinedList[index];
+  if (length == 0 || length == null) {
+    password = "Your secure password";
   }
+  
+  else {
+    if (upper) {
+      var upperIndex = Math.floor(Math.random() * 26);
+      password = password + upperList[upperIndex];
+      x++;
+      combinedList = combinedList.concat(upperList);
+    }
+    if (lower) {
+      var lowerIndex = Math.floor(Math.random() * 26);
+      password = password + lowerList[lowerIndex];
+      x++;
+      combinedList = combinedList.concat(lowerList);
+    }
+    if (num) {
+      var numIndex = Math.floor(Math.random() * 10);
+      password = password + numList[numIndex];
+      x++;
+      combinedList = combinedList.concat(numList);
+    }
+    if (special) {
+      var specialIndex = Math.floor(Math.random() * 29);
+      password = password + specialList[specialIndex];
+      x++;
+      combinedList = combinedList.concat(specialList);
+    }
 
-  // var password = function generatePassword() { // function to generate password
-  //   return "example"; 
-  // };
+    // Pick the remaining elements from the combined array
+    for (var i=x; i < length; i++) {
+      var index = Math.floor(Math.random() * combinedList.length);
+      password = password + combinedList[index];
+    }
+}
 
   var passwordText = document.querySelector("#password"); // ties JS variable to the HTML text box
   passwordText.value = password; // puts output of generatePassword in the text box
 };
 
 // When button is clicked, call the writePassword function
-generateBtn.addEventListener("click", writePassword);
+generateBtn.addEventListener("click", generatePassword);
